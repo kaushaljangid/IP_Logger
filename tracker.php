@@ -72,7 +72,18 @@ function getBrowser() {
 
 $user_os        = getOS();
 $user_browser   = getBrowser();
-
+$details = json_decode(file_get_contents('https://www.iplocate.io/api/lookup/'.$_SERVER['REMOTE_ADDR']));
+$country = $details->country;
+$country_code = $details->country_code;
+$city =  $details->city;
+$continent = $details->continent;
+$latitude = $details->latitude;
+$longitude = $details->longitude;
+$time_zone = $details->time_zone;
+$postal_code = $details->postal_code;
+$org = $details->org;
+$asn = $details->asn;
+$subdivision = $details->subdivision;
 //THIS IS THE SCRIPT FOR THE ACTUAL TRACKING
 date_default_timezone_set("Asia/Calcutta");
 $httphost = gethostbyaddr($_SERVER['REMOTE_ADDR']);
@@ -80,7 +91,24 @@ $hostadder = $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVE
 $datetime=date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
 $my_file = 'log.txt';
 $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
-$data = "\n HOSTNAME : $httphost \n  DateTime : $datetime  \n IP ADDRESS : $hostadder  \n User Agent : $user_agent \n Browser: $user_browser\n Operating System: $user_os\n \n***************************\n";
+$data = " HOSTNAME : $httphost \n
+  DateTime : $datetime  \n 
+  IP ADDRESS : $hostadder  \n
+  User Agent : $user_agent \n
+  Browser: $user_browser \n
+  Operating System: $user_os\n
+  Country : $country  \n
+  Country Code : $country_code  \n
+  City : $city  \n
+  Continent : $continent  \n
+  Latitude : $latitude  \n
+  Longitude : $longitude  \n
+  Time Zone : $time_zone  \n
+  Postal Code : $postal_code  \n
+  Org : $org  \n
+  ASN : $asn  \n
+  Subdivision : $subdivision
+  \n-----------------------------------------------------------\n";
 fwrite($handle, $data);
 ?>
 
